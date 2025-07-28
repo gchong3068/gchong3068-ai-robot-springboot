@@ -57,6 +57,7 @@ public class DeepSeekR1ChatController {
                     //换行
                     String processed = StringUtils.isNotBlank(rawContent) ? rawContent.replace("\n","<br>") : rawContent;
 
+                    // 添加分隔线
                     if (isTextResponse && needSeparator.compareAndSet(true,false)){
                         processed = "<hr>" + processed;
                     }
