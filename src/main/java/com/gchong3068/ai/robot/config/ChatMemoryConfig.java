@@ -2,8 +2,8 @@ package com.gchong3068.ai.robot.config;
 
 import jakarta.annotation.Resource;
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.memory.ChatMemoryRepository;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
+import org.springframework.ai.chat.memory.repository.cassandra.CassandraChatMemoryRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,19 +20,17 @@ public class ChatMemoryConfig {
      * 记忆储存
      */
     @Resource
-    private ChatMemoryRepository chatMemoryRepository;
+    private CassandraChatMemoryRepository chatMemoryRepository;
 
     /**
-     * 初始化 ChatMemory
-     * @Auther: gchong3068
-     * @Date: 2025/6/1 23:25
-     * @return org.springframework.ai.chat.memory.ChatMemory
-     **/
+     * 初始化一个 ChatMemory 实例，并注入到 Spring 容器中
+     * @return
+     */
     @Bean
-    public ChatMemory chatMemory(){
+    public ChatMemory chatMemory() {
         return MessageWindowChatMemory.builder()
-                .maxMessages(50)    //最大信息窗口 50条
-                .chatMemoryRepository(chatMemoryRepository)  //记忆储存
+                .maxMessages(50) // 最大消息窗口为 50，默认值为 20
+                .chatMemoryRepository(chatMemoryRepository) // 记忆存储
                 .build();
     }
 

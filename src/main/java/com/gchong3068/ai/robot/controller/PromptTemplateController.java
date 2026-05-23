@@ -38,9 +38,6 @@ public class PromptTemplateController {
 
     /**
      * 智能代码生成 1
-     * @param message
-     * @param lang
-     * @return
      */
     @GetMapping(value = "/generateStream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<AIResponse> generateStream(@RequestParam(value = "message") String message,
@@ -62,7 +59,9 @@ public class PromptTemplateController {
 
 
 
-
+    /**
+     * 智能代码生成 2
+     */
     @GetMapping(value = "/generateStream2",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<AIResponse> generateStream2(@RequestParam(value = "message") String message,
                                            @RequestParam(value = "lang") String lang) {
@@ -90,7 +89,9 @@ public class PromptTemplateController {
                 });
     }
 
-
+    /**
+     * 智能代码生成 3
+     */
     @GetMapping(value = "/generateStream3", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<AIResponse> generateStream3(@RequestParam(value = "message") String message,
                                             @RequestParam(value = "lang") String lang) {
