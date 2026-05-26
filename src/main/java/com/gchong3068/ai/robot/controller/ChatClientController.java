@@ -1,5 +1,6 @@
 package com.gchong3068.ai.robot.controller;
 
+import com.gchong3068.ai.robot.tools.DateTimeTools;
 import jakarta.annotation.Resource;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
@@ -47,6 +48,7 @@ public class ChatClientController {
     public Flux<String> generateStream(@RequestParam(value = "message",defaultValue = "测试") String message,
                                        @RequestParam(value = "chatId") String chatId){
         return chatClient.prompt()
+                .tools(new DateTimeTools())
                 .user(message)
                 .advisors(item -> item.param(ChatMemory.CONVERSATION_ID,chatId))  //对话隔离
                 .stream()

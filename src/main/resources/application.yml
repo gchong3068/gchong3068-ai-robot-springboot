@@ -29,21 +29,25 @@ spring:
           temperature: 0.7
     openai:
       base-url: https://dashscope.aliyuncs.com/compatible-mode
-      api-key: sk-ecd116c5b63341f9a65a297d964adff7
+      api-key: sk-4e6a86bdc5ae420e944dae86c9d4675b
       chat:
         options:
-          model: qwen-turbo
+          model: qwen-omni-turbo
           temperature: 0.7
     chat:
       memory:
         repository:
           cassandra:
-            keyspace: xiaoha_ai_robot # 指定存储聊天记忆的 Keyspace（类似数据库名）
+            keyspace: gchong3068_ai_robot # 指定存储聊天记忆的 Keyspace（类似数据库名）
             table: t_ai_chat_memory # 表名
             time-to-live: 1095d # 数据的自动过期时间（1095天 ≈ 3年）
             initialize-schema: true  # 自动初始化表结构
-
-
+    mcp:
+      client:
+        stdio:
+          servers-configuration: classpath:/mcp_servers_config.json # 指定 MCP 服务的配置文件路径
+        toolcallback:
+          enabled: true # 开启 MCP 客户端的工具回调（Tool Callback）功能
 logging:
   level:
     org.springframework.ai.chat.client.advisor: debug
