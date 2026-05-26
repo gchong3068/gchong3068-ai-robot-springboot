@@ -12,13 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.alibaba.dashscope.utils.Constants.apiKey;
 
 /**
  * @Author: gchong3068
  * @Date: 2026/5/26 9:21
  * @Version: v1.0.0
- * @Description: TODO
+ * @Description: 文生图
  **/
 @RestController
 @RequestMapping("/v10/ai")
