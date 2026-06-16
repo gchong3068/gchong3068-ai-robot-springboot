@@ -1,0 +1,8 @@
+server:
+  port: 8080
+
+spring:
+  ai:
+    openai:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode
+      api-key: sk-4e6a86bdc5ae420e944dae86c9d4675b
