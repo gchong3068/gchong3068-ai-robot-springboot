@@ -28,7 +28,9 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
     private final AiChatReqVO aiChatReqVO;
     private final TransactionTemplate transactionTemplate;
 
-    public CustomStreamLoggerAndMessage2DBAdvisor(ChatMessageMapper chatMessageMapper, AiChatReqVO aiChatReqVO, TransactionTemplate transactionTemplate) {
+    public CustomStreamLoggerAndMessage2DBAdvisor(ChatMessageMapper chatMessageMapper,
+                                                  AiChatReqVO aiChatReqVO,
+                                                  TransactionTemplate transactionTemplate) {
         this.chatMessageMapper = chatMessageMapper;
         this.aiChatReqVO = aiChatReqVO;
         this.transactionTemplate = transactionTemplate;
@@ -36,12 +38,13 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
 
     @Override
     public Flux<ChatClientResponse> adviseStream(ChatClientRequest chatClientRequest, StreamAdvisorChain streamAdvisorChain) {
-        Flux<ChatClientResponse> chatClientResponseFlux = streamAdvisorChain.nextStream(chatClientRequest);
-
+        // 对话 UUID
         String chatUuid = aiChatReqVO.getChatId();
-
+        // 用户消息
         String userMessage = aiChatReqVO.getMessage();
 
+        // 流式调用
+        Flux<ChatClientResponse> chatClientResponseFlux = streamAdvisorChain.nextStream(chatClientRequest);
 
         // 创建 AI 流式回答聚合容器（线程安全）
         AtomicReference<StringBuilder> fullContent = new AtomicReference<>(new StringBuilder());
@@ -64,32 +67,30 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
                     String completeResponse = fullContent.get().toString();
                     log.info("\n==== FULL AI RESPONSE ====\n{}\n========================", completeResponse);
 
-                    //开启编程式事务
+                    // 开启编程式事务
                     transactionTemplate.execute(status -> {
-                        try{
-
-                            //1. 储存用户信息
+                        try {
+                            // 1. 存储用户消息
                             chatMessageMapper.insert(ChatMessageDO.builder()
-                                            .chatUuid(chatUuid)
-                                            .content(userMessage)
-                                            .role(MessageType.USER.getValue())
-                                            .createTime(LocalDateTime.now())
+                                    .chatUuid(chatUuid)
+                                    .content(userMessage)
+                                    .role(MessageType.USER.getValue()) // 用户消息
+                                    .createTime(LocalDateTime.now())
                                     .build());
 
-                            //2. 储存AI回答
+                            // 2. 存储 AI 回答
                             chatMessageMapper.insert(ChatMessageDO.builder()
-                                            .chatUuid(chatUuid)
-                                            .content(userMessage)
-                                            .role(MessageType.ASSISTANT.getValue())
-                                            .createTime(LocalDateTime.now())
+                                    .chatUuid(chatUuid)
+                                    .content(completeResponse)
+                                    .role(MessageType.ASSISTANT.getValue()) // AI 回答
+                                    .createTime(LocalDateTime.now())
                                     .build());
 
                             return true;
-                        }catch (Exception e){
-                            status.setRollbackOnly();  //标记回滚
-                            log.error("",e);
+                        } catch (Exception ex) {
+                            status.setRollbackOnly(); // 标记事务为回滚
+                            log.error("", ex);
                         }
-
                         return false;
                     });
                 })
@@ -101,12 +102,12 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
     }
 
     @Override
-    public String getName() {
-        return this.getClass().getSimpleName();
+    public int getOrder() {
+        return 99; // order 值越小，越先执行
     }
 
     @Override
-    public int getOrder() {
-        return 99;
+    public String getName() {
+        return this.getClass().getSimpleName();
     }
 }
