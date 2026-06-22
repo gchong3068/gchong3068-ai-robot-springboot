@@ -17,6 +17,7 @@ import com.gchong3068.ai.robot.utils.StringUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -167,10 +168,11 @@ public class ChatServiceImpl implements ChatService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Response<?> deleteChat(DeleteChatReqVO deleteChatReqVO) {
 
         // 对话 UUID
-        String uuid = deleteChatReqVO.getUudi();
+        String uuid = deleteChatReqVO.getUuid();
 
         // 删除对话
         int count = chatMapper.delete(Wrappers.<ChatDO>lambdaQuery()

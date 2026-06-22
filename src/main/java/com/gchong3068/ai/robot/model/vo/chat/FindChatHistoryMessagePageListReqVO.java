@@ -1,11 +1,11 @@
 package com.gchong3068.ai.robot.model.vo.chat;
 
 import com.gchong3068.ai.robot.model.common.BasePageQuery;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 
 /**
  * @Author: gchong3068

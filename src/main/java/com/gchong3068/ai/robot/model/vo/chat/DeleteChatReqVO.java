@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @Author: gchong3068
@@ -14,12 +15,12 @@ import lombok.Data;
  **/
 @Data
 @AllArgsConstructor
-@NotNull
+@NoArgsConstructor
 @Builder
 public class DeleteChatReqVO {
 
 
-    @NotBlank(message = "对话UUID 不能为空")
-    private String uudi;
+    @NotBlank(message = "对话 UUID 不能为空")
+    private String uuid;
 
 }

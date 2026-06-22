@@ -23,10 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
@@ -121,8 +118,8 @@ public class ChatController {
     }
 
     @PostMapping("/message/list")
-    @ApiOperationLog(description = "查询对话历史信息")
-    public PageResponse<FindChatHistoryMessagePageListRspVO> findChatMessagePageList(FindChatHistoryMessagePageListReqVO findChatHistoryMessagePageListReqVO) {
+    @ApiOperationLog(description = "查询对话历史消息")
+    public PageResponse<FindChatHistoryMessagePageListRspVO> findChatMessagePageList(@RequestBody @Validated FindChatHistoryMessagePageListReqVO findChatHistoryMessagePageListReqVO) {
         return chatService.findChatHistoryMessagePageList(findChatHistoryMessagePageListReqVO);
     }
 
