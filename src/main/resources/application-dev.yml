@@ -18,10 +18,21 @@ spring:
     openai:
       base-url: https://dashscope.aliyuncs.com/compatible-mode
       api-key: sk-4e6a86bdc5ae420e944dae86c9d4675b
+      embedding:
+        options:
+          model: text-embedding-v4 # 向量化模型
+          dimensions: 1536 # 维度
+    vectorstore:
+      pgvector:
+        index-type: HNSW # 索引类型
+        distance-type: COSINE_DISTANCE # 距离类型
+        dimensions: 1536 # 嵌入维度
+        max-document-batch-size: 10000 # 每批处理的最大文档数
+        table-name: t_vector_store # 向量表名称
 
 okhttp: # OkHttp 客户端配置
   connect-timeout: 5000    # 建立连接的最大等待时间（毫秒）
-  read-timeout: 30000      # 读取数据的最大等待时间（毫秒）
+  read-timeout: 3000000      # 读取数据的最大等待时间（毫秒）
   write-timeout: 15000     # 写入数据的最大等待时间（毫秒）
   max-idle-connections: 200 # 连接池中保持的最大空闲连接数
   keep-alive-duration: 5   # 空闲连接在连接池中的存活时间（分钟）

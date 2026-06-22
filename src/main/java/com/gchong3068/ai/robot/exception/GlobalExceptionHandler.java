@@ -3,6 +3,7 @@ package com.gchong3068.ai.robot.exception;
 import com.gchong3068.ai.robot.enums.ResponseCodeEnum;
 import com.gchong3068.ai.robot.utils.Response;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -69,6 +71,22 @@ public class GlobalExceptionHandler {
 
         return Response.fail(errorCode, errorMessage);
     }
+
+
+    /**
+     * 客户端主动断开连接异常
+     * @param e
+     * @param response
+     */
+    @ExceptionHandler({IOException.class})
+    public void handleClientAbortException(IOException e, HttpServletResponse response) {
+
+        if (e.getMessage() != null && e.getMessage().contains("你的主机中的软件中止了一个已建立的连接")){
+            log.warn("客户端主动断开连接，忽略此异常");
+            return;
+        }
+    }
+
 
 
     /**

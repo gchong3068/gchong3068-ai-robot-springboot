@@ -8,7 +8,10 @@ import org.springframework.ai.chat.client.ChatClientRequest;
 import org.springframework.ai.chat.client.ChatClientResponse;
 import org.springframework.ai.chat.client.advisor.api.StreamAdvisor;
 import org.springframework.ai.chat.client.advisor.api.StreamAdvisorChain;
+import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.MessageType;
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.model.Generation;
 import org.springframework.transaction.support.TransactionTemplate;
 import reactor.core.publisher.Flux;
 
@@ -52,14 +55,24 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
         // 返回处理后的流
         return chatClientResponseFlux
                 .doOnNext(response -> {
-                    // 逐块收集内容
-                    String chunk = response.chatResponse().getResult().getOutput().getText();
+                    // 【关键修复】增加多层判空保护
+                    if (response != null && response.chatResponse() != null) {
+                        ChatResponse chatResp = response.chatResponse();
 
-                    log.info("## chunk: {}", chunk);
+                        // 获取 Result，防止 NPE
+                        Generation result = chatResp.getResult();
+                        if (result != null) {
+                            AssistantMessage output = result.getOutput();
+                            if (output != null) {
+                                String chunk = output.getText();
 
-                    // 若 chunk 块不为空，则追加到 fullContent 中
-                    if (chunk != null) {
-                        fullContent.get().append(chunk);
+                                // 只有当 chunk 不为空时才打印和拼接
+                                if (chunk != null && !chunk.isEmpty()) {
+                                    log.info("## chunk: {}", chunk);
+                                    fullContent.get().append(chunk);
+                                }
+                            }
+                        }
                     }
                 })
                 .doOnComplete(() -> {

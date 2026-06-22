@@ -27,6 +27,8 @@
         <okhttp.version>4.12.0</okhttp.version>
         <jsoup.version>1.17.2</jsoup.version>
         <hutool.version>5.8.39</hutool.version>
+        <commons-io.version>2.20.0</commons-io.version>
+
 
     </properties>
 
@@ -162,6 +164,23 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-markdown-document-reader</artifactId>
+        </dependency>
+
+        <!-- PGvector 向量化存储 -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-vector-store-pgvector</artifactId>
         </dependency>
 
     </dependencies>
